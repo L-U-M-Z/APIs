@@ -1,3 +1,4 @@
+
 /////////////////////////////////////////
 //  MCDONALD
 /////////////////////////////////////////
@@ -9,30 +10,20 @@ class McDonald {
         let stores  = [];
         let page    = 0;
 
-        //  UTIL
-
-        function getStorePage(page) {
-            return fetch(`https://api.woosmap.com/stores?page=${page}&key=woos-77bec2e5-8f40-35ba-b483-67df0d5401be`, {
+        function getNextPage() {
+            return fetch(`https://api.woosmap.com/stores?page=${++page}&key=woos-77bec2e5-8f40-35ba-b483-67df0d5401be`, {
                 headers: {
                     Origin: "https://www.restaurants.mcdonalds.fr"
                 }
             })
                 .then(res => res.json())
+                .then(res => {
+                    stores.push(...res.features);
+                    return page != res.pagination.pageCount;
+                });
         }
 
-        //  GETTER
-
-        while (true) {
-            let res = await getStorePage(++page);
-
-            // Push stores.
-            stores.push(...res.features);
-
-            // Check final page.
-            if (page == res.pagination.pageCount)
-                break;
-        }
-
+        while (await getNextPage());
         return stores;
     }
 
