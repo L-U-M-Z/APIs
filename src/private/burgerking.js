@@ -1,3 +1,5 @@
+const { fetch } = require('../utils.js');
+
 
 /////////////////////////////////////////
 //  BURGER KING

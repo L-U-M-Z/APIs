@@ -1,5 +1,6 @@
 const fs    = require('fs');
 const path  = require('path');
+const utils = require('./utils.js');
 
 
 //////////////////////////////////////////////
@@ -29,3 +30,4 @@ function loader(dir, file) {
 
 fs.readdirSync(private).forEach(loader.bind(null, private));
 fs.readdirSync(public).forEach(loader.bind(null, public));
+Object.assign(exports, utils);

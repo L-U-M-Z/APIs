@@ -1,3 +1,5 @@
+const { fetch } = require('../utils.js');
+
 
 /////////////////////////////////////////
 //  ROOT ME
@@ -19,7 +21,7 @@ module.exports = class RootMe {
             .then(res => res.text())
             .then(res => /formulaire_action_args.+?value='(.+?)'.+?_jeton.+?value='(.+?)'/s.exec(res))
             .then(res => [res[1], res[2]]);
-    
+
         return fetch(`POST`, `https://www.root-me.org/?page=messagerie&inc=write&lang=fr`, {
             headers: {
                 "cookie": `spip_session=${this.SPIP}`,
