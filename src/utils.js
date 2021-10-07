@@ -17,9 +17,10 @@ exports.sleep = function (ms) {
 //////////////////////////////////////
 
 
-//  EXPORT
+//  UTILS
 
-exports.adjust = function (url, location) {
+function adjust(url, location) {
+
     // Absolute link.
     if (/^https?:\/{2}/.test(location))
         return location;
@@ -30,13 +31,13 @@ exports.adjust = function (url, location) {
     return host + location;
 };
 
-exports.querystring = function (query) {
+function querystring(query) {
     return Object.entries(query)
         .map(([k, v]) => (k + '=' + encodeURIComponent(v)))
         .join('&');
 };
 
-exports.fetch = function (method, url, extra = {}) {
+function fetch(method, url, extra = {}) {
     return new Promise((resolve, reject) => {
         const options = {
             method,
@@ -103,6 +104,12 @@ exports.fetch = function (method, url, extra = {}) {
     });
 };
 
+//  EXPORTS
+
+exports.adjust      = adjust;
+exports.querystring = querystring;
+exports.fetch       = fetch;
+
 
 //////////////////////////////////////
 //  CRYPTO
@@ -146,4 +153,4 @@ Map.prototype.map = function (callback) {
     result.length = i;
 
     return result;
-}
+};
