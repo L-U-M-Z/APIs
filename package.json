@@ -1,0 +1,6 @@
+{
+    "name": "apis",
+    "description": "Reverse engineering and implementation of several public and private APIs.",
+    "version": "1.0.0",
+    "main": "src/index.js"
+}

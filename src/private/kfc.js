@@ -4,7 +4,8 @@
 /////////////////////////////////////////
 
 
-class KFC {
+module.exports = class KFC {
+
     static getStoreList() {
         return fetch(`https://api.kfc.fr/stores/allStores`)
             .then(res => res.json());
@@ -19,4 +20,5 @@ class KFC {
         return fetch(`https://api.kfc.fr/menu/kfcfr-generic-menu`)
             .then(res => res.json());
     }
-}
+
+};

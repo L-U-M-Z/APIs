@@ -4,7 +4,7 @@
 /////////////////////////////////////////
 
 
-class BurgerKing {
+module.exports = class BurgerKing {
 
     static getStoreList() {
         return fetch(`https://webapi.burgerking.fr/blossom/api/v11/public/store-locator`)
@@ -20,4 +20,5 @@ class BurgerKing {
         return fetch(`https://webapi.burgerking.fr/blossom/api/v11/public/restaurant/${label}/page`)
             .then(res => res.json());
     }
-}
+
+};

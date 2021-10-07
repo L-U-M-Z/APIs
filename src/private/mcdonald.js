@@ -4,7 +4,7 @@
 /////////////////////////////////////////
 
 
-class McDonald {
+module.exports = class McDonald {
 
     static async getStoreList() {
         let stores  = [];
@@ -36,4 +36,5 @@ class McDonald {
         return fetch(`https://ws.mcdonalds.fr/api/product/${ref}?responseGroups=RG.PRODUCT.CHOICE_DETAILS&responseGroups=RG.PRODUCT.RESTAURANT_STATUS&responseGroups=RG.PRODUCT.DEFAULT&responseGroups=RG.PRODUCT.PICTURES&responseGroups=RG.PRODUCT.ALLERGENS&responseGroups=RG.PRODUCT.INGREDIENTS&responseGroups=RG.PRODUCT.NUTRITIONAL_VALUES&responseGroups=RG.PRODUCT.POPINS&responseGroups=RG.PRODUCT.CAPPING`)
             .then(res => res.json());
     }
-}
+
+};
