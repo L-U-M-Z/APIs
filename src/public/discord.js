@@ -15,6 +15,7 @@ module.exports = class Discord {
         this.authorize_url = `https://discord.com/api/oauth2/authorize?` + querystring({
             client_id       : options.client_id,
             redirect_uri    : options.redirect_uri,
+            state           : options.state ?? "",
             scope           : options.scope,
             response_type   : options.response_type
         });

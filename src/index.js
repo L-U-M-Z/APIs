@@ -16,7 +16,6 @@ exports.RootMe          = require("./private/rootme.js");
 
 //  PUBLIC
 
-exports.MicrosoftAzure  = require("./public/azure.js");
 exports.Discord         = require("./public/discord.js");
 
 //  UTILS
@@ -24,5 +23,6 @@ exports.Discord         = require("./public/discord.js");
 exports.sleep           = utils.sleep;
 exports.querystring     = utils.querystring;
 exports.fetch           = utils.fetch;
+exports.randomString    = utils.randomString;
 exports.atob            = utils.atob;
 exports.btoa            = utils.btoa;

@@ -114,7 +114,7 @@ exports.fetch       = fetch;
 //////////////////////////////////////
 
 
-exports.generateRandomString = function (length, encoding = "base64") {
+exports.randomString = function (length, encoding = "base64") {
     return crypto.randomBytes(length).toString(encoding);
 };
 
