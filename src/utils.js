@@ -1,5 +1,6 @@
-const https  = require('https');
-const crypto = require('crypto');
+const http   = require("http");
+const https  = require("https");
+const crypto = require("crypto");
 
 
 //////////////////////////////////////
@@ -19,94 +20,91 @@ exports.sleep = function (ms) {
 
 //  UTILS
 
-function adjust(url, location) {
-
-    // Absolute link.
-    if (/^https?:\/{2}/.test(location))
-        return location;
-
-    const host = /^(https?:\/\/.+?)(\/.*)?$/.exec(url)[1];
-
-    // Relative link.
-    return host + location;
-};
-
 function querystring(query) {
     return Object.entries(query)
-        .map(([k, v]) => (k + '=' + encodeURIComponent(v)))
-        .join('&');
+        .map(([k, v]) => (k + "=" + encodeURIComponent(v)))
+        .join("&");
 };
 
 function fetch(method, url, extra = {}) {
+
+    // Parse url to URL.
+    if (url instanceof URL == false)
+        url = new URL(url);
+
     return new Promise((resolve, reject) => {
         const options = {
             method,
-            timeout: 5000,
+            timeout: extra.timeout ?? 5000,
             headers: extra.headers ?? {}
         };
 
         if (extra.query)
-            url += '?' + querystring(extra.query);
+            url.search = "?" + querystring(extra.query);
 
         if (extra.form) {
-            options.headers['content-type'] = 'application/x-www-form-urlencoded';
+            options.headers["content-type"] = "application/x-www-form-urlencoded";
             extra.body                      = querystring(extra.form);
 
         } else if (extra.json) {
-            options.headers['content-type'] = 'application/json';
+            options.headers["content-type"] = "application/json";
             extra.body                      = JSON.stringify(extra.json);
         }
 
-        let req = https.request(url, options, res => {
-            if (res.statusCode == 302 || res.statusCode == 301)
-                return res.destroy(),
-                    fetch(method, adjust(url, res.headers.location), extra)
-                        .then(resolve)
-                        .catch(reject);
+        function send(url) {
+            const module = (url.protocol == "https:")
+                ? https
+                : http;
 
-            //  URI
+            let req = module.request(url, options, res => {
 
-            res.uri = url;
+                // Follow redirects.
+                if (res.statusCode == 302 || res.statusCode == 301) {
+                    res.destroy();
+                    return send(new URL(res.headers.location, url));
+                }
 
-            //  STREAM
+                // Return stream.
+                if (extra.stream)
+                    return resolve(res);
 
-            if (extra.stream)
-                return resolve(res);
+                //  BUFFER
 
-            //  BUFFER
+                let body = Buffer.alloc(0);
 
-            let body = Buffer.alloc(0);
+                res.raw  = () => body;
+                res.text = () => body.toString("utf8");
+                res.json = () => JSON.parse(body.toString("utf8"));
 
-            res.raw  = () => body;
-            res.text = () => body.toString('utf8');
-            res.json = () => JSON.parse(body.toString('utf8'));
+                //  EVENTS
 
-            //  EVENTS
+                res.on("data", chunk => {
+                    body = Buffer.concat([body, chunk])
+                });
 
-            res.on('data', chunk => {
-                body = Buffer.concat([body, chunk])
+                res.on("end", () => {
+                    (res.statusCode >= 200) && (res.statusCode <= 299)
+                        ? resolve(res)
+                        : reject({
+                            code    : res.statusCode,
+                            error   : res.headers["content-type"] == "application/json"
+                                ? res.json()
+                                : res.text()
+                        });
+                });
             });
 
-            res.on('end', () => {
-                res.statusCode >= 200 && res.statusCode <= 299
-                    ? resolve(res)
-                    : reject({
-                        code: res.statusCode,
-                        error: res.headers['content-type'] == 'application/json'
-                            ? res.json()
-                            : res.text()
-                    });
-            });
-        });
+            req.on("error", ({ code, error }) => reject({ code, error }));
+            req.end(extra.body);
+        }
 
-        req.on('error', ({ code, error }) => reject({ code, error }));
-        req.end(extra.body);
+        // Send request.
+        send(url);
     });
 };
 
 //  EXPORTS
 
-exports.adjust      = adjust;
 exports.querystring = querystring;
 exports.fetch       = fetch;
 
@@ -116,7 +114,7 @@ exports.fetch       = fetch;
 //////////////////////////////////////
 
 
-exports.generateRandomString = function (length, encoding = 'base64') {
+exports.generateRandomString = function (length, encoding = "base64") {
     return crypto.randomBytes(length).toString(encoding);
 };
 
@@ -127,16 +125,16 @@ exports.generateRandomString = function (length, encoding = 'base64') {
 
 
 exports.btoa = function (str) {
-    return Buffer.from(str).toString('base64');
+    return Buffer.from(str).toString("base64");
 };
 
 exports.atob = function (str) {
-    return Buffer.from(str, 'base64').toString('ascii');
+    return Buffer.from(str, "base64").toString("ascii");
 };
 
 
 //////////////////////////////////////
-//  EXTEND
+//  EXTENDS
 //////////////////////////////////////
 
 

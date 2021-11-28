@@ -1,4 +1,4 @@
-const { fetch } = require('../utils.js');
+const { fetch } = require("../utils.js");
 
 
 /////////////////////////////////////////
@@ -8,8 +8,8 @@ const { fetch } = require('../utils.js');
 
 function formatDate(date) {
     let year = date.getFullYear();
-    let month = String(date.getMonth()).padStart(2, '0');
-    let day = String(date.getDate()).padStart(2, '0');
+    let month = String(date.getMonth()).padStart(2, "0");
+    let day = String(date.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
 }
 
@@ -30,10 +30,10 @@ module.exports = class OuiSNCF {
     authenticate(email, password) {
         return fetch(`https://www.oui.sncf/customer/api/clients/customer/authentication`, {
             headers: {
-                'Content-Type': 'application/json'
+                "Content-Type": "application/json"
             },
             body: JSON.stringify({ email }),
-            method: 'POST'
+            method: "POST"
         })
             .then(res => res.json());
     }
@@ -133,7 +133,7 @@ module.exports = class OuiSNCF {
         return fetch(`https://www.oui.sncf/booking/autocomplete-d2d?uc=fr-FR&searchField=origin&searchTerm=${term}`)
             .then(res => res.json())
             .then(res => res.filter(item => {
-                return item.category == 'station';
+                return item.category == "station";
             }));
     }
 

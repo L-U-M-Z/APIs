@@ -1,4 +1,4 @@
-const { fetch } = require('../utils.js');
+const { fetch } = require("../utils.js");
 
 
 /////////////////////////////////////////
@@ -52,5 +52,4 @@ module.exports = class RootMe {
         })
             .then(res => res.json());
     }
-
 };

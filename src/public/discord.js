@@ -1,4 +1,4 @@
-const { fetch, querystring } = require('../utils.js');
+const { fetch, querystring } = require("../utils.js");
 
 
 /////////////////////////////////////////
@@ -26,14 +26,14 @@ module.exports = class Discord {
     /////////////////////////////////////
 
 
-    authorizeDiscord(code) {
+    authorize(code) {
         return fetch(`POST`, `https://discord.com/api/oauth2/token`, {
             form: {
                 client_id       : this.client_id,
                 client_secret   : this.client_secret,
                 redirect_uri    : this.redirect_uri,
                 scope           : this.scope,
-                grant_type      : 'authorization_code',
+                grant_type      : `authorization_code`,
                 code
             }
         })

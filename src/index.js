@@ -1,33 +1,28 @@
-const fs    = require('fs');
-const path  = require('path');
-const utils = require('./utils.js');
+const utils = require("./utils.js");
 
 
 //////////////////////////////////////////////
-//  GLOBAL
+//  MODULES
 //////////////////////////////////////////////
 
 
-const private = path.join(__dirname, 'private');
-const public  = path.join(__dirname, 'public');
+//  PRIVATE
 
-//  LOADER
+exports.BurgerKing      = require("./private/burgerking.js");
+exports.KFC             = require("./private/kfc.js");
+exports.McDonald        = require("./private/mcdonald.js");
+exports.OuiSNCF         = require("./private/ouisncf.js");
+exports.RootMe          = require("./private/rootme.js");
 
-function loader(dir, file) {
+//  PUBLIC
 
-    // Load module.
-    let module = require(path.join(dir, file));
+exports.MicrosoftAzure  = require("./public/azure.js");
+exports.Discord         = require("./public/discord.js");
 
-    // Export module.
-    exports[module.name] = module;
-}
+//  UTILS
 
-
-//////////////////////////////////////////////
-//  MODULE
-//////////////////////////////////////////////
-
-
-fs.readdirSync(private).forEach(loader.bind(null, private));
-fs.readdirSync(public).forEach(loader.bind(null, public));
-Object.assign(exports, utils);
+exports.sleep           = utils.sleep;
+exports.querystring     = utils.querystring;
+exports.fetch           = utils.fetch;
+exports.atob            = utils.atob;
+exports.btoa            = utils.btoa;
