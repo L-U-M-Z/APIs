@@ -98,7 +98,7 @@ module.exports = class Discord {
             .then(res=>res.json())
     }
 
-    static fetchSubscriptions(token_user, guild_id) {
+    static getSubscriptions(token_user, guild_id) {
         return fetch(`https://discord.com/api/v10/guilds/${guild_id}/premium/subscriptions`, {
             headers: {
                 Authorization: token_user,
