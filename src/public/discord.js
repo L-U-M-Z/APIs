@@ -9,13 +9,16 @@ const { fetch, querystring } = require("../utils.js");
 module.exports = class Discord {
 
     constructor(options) {
-        Object.assign(this, options);
+        this.client_id      = options.client_id;
+        this.client_secret  = options.client_secret;
+        this.redirect_uri   = options.redirect_uri;
+        this.scope          = options.scope;
+        this.response_type  = options.response_type;
 
         // Set authorize URL.
         this.authorize_url = `https://discord.com/api/oauth2/authorize?` + querystring({
             client_id       : options.client_id,
             redirect_uri    : options.redirect_uri,
-            state           : options.state ?? "",
             scope           : options.scope,
             response_type   : options.response_type
         });
@@ -28,14 +31,26 @@ module.exports = class Discord {
 
 
     authorize(code) {
-        return fetch(`POST`, `https://discord.com/api/oauth2/token`, {
+        return fetch(`POST`, `https://discord.com/api/v10/oauth2/token`, {
             form: {
                 client_id       : this.client_id,
                 client_secret   : this.client_secret,
                 redirect_uri    : this.redirect_uri,
                 scope           : this.scope,
-                grant_type      : `authorization_code`,
+                grant_type      : "authorization_code",
                 code
+            }
+        })
+            .then(res => res.json());
+    }
+
+    refreshToken(token) {
+        return fetch(`POST`, `https://discord.com/api/v10/oauth2/token`, {
+            form: {
+                client_id       : this.client_id,
+                client_secret   : this.client_secret,
+                grant_type      : "refresh_token",
+                refresh_token   : token
             }
         })
             .then(res => res.json());
@@ -48,7 +63,7 @@ module.exports = class Discord {
 
 
     static getUser(token) {
-        return fetch(`GET`, `https://discord.com/api/v9/users/@me`, {
+        return fetch(`GET`, `https://discord.com/api/v10/users/@me`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -57,7 +72,7 @@ module.exports = class Discord {
     }
 
     static getConnections(token) {
-        return fetch(`GET`, `https://discord.com/api/v9/users/@me/connections`, {
+        return fetch(`GET`, `https://discord.com/api/v10/users/@me/connections`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -66,7 +81,7 @@ module.exports = class Discord {
     }
 
     static getGuilds(token) {
-        return fetch(`GET`, `https://discord.com/api/v9/users/@me/guilds`, {
+        return fetch(`GET`, `https://discord.com/api/v10/users/@me/guilds`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -74,4 +89,21 @@ module.exports = class Discord {
             .then(res => res.json());
     }
 
+    static getUserProfile(token_user, user_id){
+        return fetch(`GET`, `https://discord.com/api/v10/users/${user_id}/profile`, {
+            headers: {
+                Authorization: token_user
+            }
+        })
+            .then(res=>res.json())
+    }
+
+    static fetchSubscriptions(token_user, guild_id) {
+        return fetch(`https://discord.com/api/v10/guilds/${guild_id}/premium/subscriptions`, {
+            headers: {
+                Authorization: token_user,
+            }
+        })
+            .then(res => res.json());
+    }
 };

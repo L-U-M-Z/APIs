@@ -22,5 +22,4 @@ module.exports = class BurgerKing {
         return fetch(`https://webapi.burgerking.fr/blossom/api/v11/public/restaurant/${label}/page`)
             .then(res => res.json());
     }
-
 };
