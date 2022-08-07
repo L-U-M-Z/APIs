@@ -87,6 +87,7 @@ function fetch(method, url, extra = {}) {
                         ? resolve(res)
                         : reject({
                             code    : res.statusCode,
+                            headers : res.headers,
                             error   : res.headers["content-type"] == "application/json"
                                 ? res.json()
                                 : res.text()
