@@ -1,6 +1,7 @@
 const http      = require("http");
 const https     = require("https");
 const crypto    = require("crypto");
+const zlib      = require("zlib");
 
 
 //////////////////////////////////////
@@ -62,6 +63,19 @@ function fetch(method, url, extra = {}) {
                 if (res.statusCode == 302 || res.statusCode == 301) {
                     res.destroy();
                     return send(new URL(res.headers.location, url));
+                }
+
+                // Decompress stream.
+                if (res.headers["content-encoding"] == "gzip") {
+                    let gunzip = zlib.createGunzip();
+
+                    // Set basics.
+                    gunzip.headers      = res.headers;
+                    gunzip.statusCode   = res.statusCode;
+
+                    // Pipe stream and set res.
+                    res.pipe(gunzip);
+                    res = gunzip;
                 }
 
                 // Return stream.
