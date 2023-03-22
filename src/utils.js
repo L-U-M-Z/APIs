@@ -23,6 +23,7 @@ exports.sleep = function (ms) {
 
 function querystring(query) {
     return Object.entries(query)
+        .filter(([ k, v ]) => v !== undefined)
         .map(([k, v]) => (k + "=" + encodeURIComponent(v)))
         .join("&");
 };
