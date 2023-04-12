@@ -45,8 +45,8 @@ function fetch(method, url, extra = {}) {
             url.search = "?" + querystring(extra.query);
 
         if (extra.form) {
-            extra.body                      = querystring(extra.form);
-            options.headers["content-type"] = "application/x-www-form-urlencoded";
+            extra.body                          = querystring(extra.form);
+            options.headers["content-type"]     = "application/x-www-form-urlencoded";
             options.headers["content-length"]   = extra.body.length;
 
         } else if (extra.json) {
