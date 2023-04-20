@@ -47,12 +47,12 @@ function fetch(method, url, extra = {}) {
         if (extra.form) {
             extra.body                          = querystring(extra.form);
             options.headers["content-type"]     = "application/x-www-form-urlencoded";
-            options.headers["content-length"]   = extra.body.length;
+            options.headers["content-length"]   = Buffer.byteLength(extra.body);
 
         } else if (extra.json) {
             extra.body                          = JSON.stringify(extra.json);
             options.headers["content-type"]     = "application/json";
-            options.headers["content-length"]   = extra.body.length;
+            options.headers["content-length"]   = Buffer.byteLength(extra.body);
         }
 
         function send(url) {
