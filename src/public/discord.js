@@ -24,6 +24,12 @@ module.exports = class Discord {
         });
     }
 
+    get __appAuthorization() {
+        const token = btoa(`${this.client_id}:${this.client_secret}`);
+
+        return `Basic ${token}`;
+    }
+
 
     /////////////////////////////////////
     //  AUTHORIZE
@@ -32,26 +38,29 @@ module.exports = class Discord {
 
     authorize(code) {
         return fetch(`POST`, `https://discord.com/api/v10/oauth2/token`, {
+            headers: {
+                "Authorization" : this.__appAuthorization,
+                "Content-Type"  : "application/x-www-form-urlencoded",
+            },
             form: {
-                client_id       : this.client_id,
-                client_secret   : this.client_secret,
-                redirect_uri    : this.redirect_uri,
-                scope           : this.scope,
                 grant_type      : "authorization_code",
-                code
-            }
+                redirect_uri    : this.redirect_uri,
+                code,
+            },
         })
             .then(res => res.json());
     }
 
     refreshToken(token) {
         return fetch(`POST`, `https://discord.com/api/v10/oauth2/token`, {
+            headers: {
+                "Authorization" : this.__appAuthorization,
+                "Content-Type"  : "application/x-www-form-urlencoded",
+            },
             form: {
-                client_id       : this.client_id,
-                client_secret   : this.client_secret,
                 grant_type      : "refresh_token",
-                refresh_token   : token
-            }
+                refresh_token   : token,
+            },
         })
             .then(res => res.json());
     }
@@ -65,8 +74,8 @@ module.exports = class Discord {
     static getUser(token) {
         return fetch(`GET`, `https://discord.com/api/v10/users/@me`, {
             headers: {
-                Authorization: `Bearer ${token}`
-            }
+                Authorization: `Bearer ${token}`,
+            },
         })
             .then(res => res.json())
     }
@@ -74,8 +83,8 @@ module.exports = class Discord {
     static getConnections(token) {
         return fetch(`GET`, `https://discord.com/api/v10/users/@me/connections`, {
             headers: {
-                Authorization: `Bearer ${token}`
-            }
+                Authorization: `Bearer ${token}`,
+            },
         })
             .then(res => res.json());
     }
@@ -83,8 +92,8 @@ module.exports = class Discord {
     static getGuilds(token) {
         return fetch(`GET`, `https://discord.com/api/v10/users/@me/guilds`, {
             headers: {
-                Authorization: `Bearer ${token}`
-            }
+                Authorization: `Bearer ${token}`,
+            },
         })
             .then(res => res.json());
     }
@@ -92,8 +101,8 @@ module.exports = class Discord {
     static getUserProfile(token_user, user_id){
         return fetch(`GET`, `https://discord.com/api/v10/users/${user_id}/profile`, {
             headers: {
-                Authorization: token_user
-            }
+                Authorization: token_user,
+            },
         })
             .then(res=>res.json())
     }
@@ -102,7 +111,7 @@ module.exports = class Discord {
         return fetch(`https://discord.com/api/v10/guilds/${guild_id}/premium/subscriptions`, {
             headers: {
                 Authorization: token_user,
-            }
+            },
         })
             .then(res => res.json());
     }
