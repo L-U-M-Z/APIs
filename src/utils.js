@@ -37,8 +37,9 @@ function fetch(method, url, extra = {}) {
     return new Promise((resolve, reject) => {
         const options = {
             method,
-            timeout: extra.timeout ?? 5000,
-            headers: extra.headers ?? {}
+            timeout : extra.timeout ?? 5000,
+            headers : extra.headers ?? {},
+            agent   : extra.agent,
         };
 
         if (extra.query)
